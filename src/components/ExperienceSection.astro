@@ -1,0 +1,170 @@
+<section class="content-section" id="experience" aria-labelledby="experience-title">
+  <div class="section-heading">
+    <p class="section-number">01 / CAREER</p>
+    <div>
+      <h2 id="experience-title">Experience</h2>
+      <p class="section-intro">Selected roles and professional milestones.</p>
+    </div>
+  </div>
+  <div class="experience-grid">
+    <article class="experience-card">
+      <button class="experience-open" type="button" aria-label="Expand Good Clinical Practice experience" aria-expanded="false" aria-haspopup="dialog"></button>
+      <button class="experience-close" type="button" aria-label="Minimize Good Clinical Practice experience" hidden>X</button>
+      <h3 id="experience-gcp-title">Good Clinical Practice (GCP) Certification (2025 and 2026)</h3>
+      <p class="experience-meta"><strong>Coursera (2026) / NIHR Research Delivery Network (2025)</strong></p>
+      <ul class="experience-bullets">
+        <li>Completed two online training courses in Good Clinical Practice. These helped develop my understanding of the ethics and regulations involved in clinical research.</li>
+        <li>Developed my knowledge of participant safety, informed consent, confidentiality, data integrity, and the responsibilities of the personnel involved.</li>
+      </ul>
+    </article>
+
+    <article class="experience-card">
+      <button class="experience-open" type="button" aria-label="Expand RStudio training experience" aria-expanded="false" aria-haspopup="dialog"></button>
+      <button class="experience-close" type="button" aria-label="Minimize RStudio training experience" hidden>X</button>
+      <h3 id="experience-rstudio-title">RStudio Training</h3>
+      <p class="experience-meta"><strong>Coursera Online Certificate (2026)</strong></p>
+      <ul class="experience-bullets">
+        <li>Gained practical experience using RStudio in my university modules, applying it to data management, statistical analysis, and visualisation.</li>
+        <li>Gained experience interpreting datasets and presenting analytical findings clearly.</li>
+      </ul>
+    </article>
+
+    <article class="experience-card">
+      <button class="experience-open" type="button" aria-label="Expand Microsoft Excel experience" aria-expanded="false" aria-haspopup="dialog"></button>
+      <button class="experience-close" type="button" aria-label="Minimize Microsoft Excel experience" hidden>X</button>
+      <h3 id="experience-excel-title">Microsoft Excel Training</h3>
+      <p class="experience-meta"><strong>Coursera Online Certificate (2026)</strong></p>
+      <ul class="experience-bullets">
+        <li>Completed online Excel training, improving my skills in data organisation, analysis, and presentation.</li>
+        <li>Applied functions, formulas, data formatting tools, and spreadsheet management tools to efficiently interpret and present data.</li>
+      </ul>
+    </article>
+
+    <article class="experience-card">
+      <button class="experience-open" type="button" aria-label="Expand practical lab experience" aria-expanded="false" aria-haspopup="dialog"></button>
+      <button class="experience-close" type="button" aria-label="Minimize practical lab experience" hidden>X</button>
+      <h3 id="experience-lab-title">University Practical Lab Experience</h3>
+      <p class="experience-meta"><strong>University of Liverpool (2024–2026)</strong></p>
+      <ul class="experience-bullets">
+        <li>Developed practical laboratory skills through university-based modules.</li>
+        <li>Gained experience in accurate sample preparation, experimental procedures, data collection, and analysis following laboratory protocols.</li>
+        <li>Demonstrated accuracy, precision, lab safety, and effective record-keeping.</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<script>
+  const cards = document.querySelectorAll(".experience-card");
+  const backgroundElements = document.querySelectorAll(
+    ".skip-link, .site-header, .site-footer, #main-content > :not(#experience), #experience > :not(.experience-grid), .experience-grid > .experience-card",
+  );
+  const originalPositions = new WeakMap();
+  let activeCard = null;
+
+  function minimizeCard(card) {
+    if (!card || card.classList.contains("is-closing")) return;
+    card.classList.add("is-closing");
+
+    const finishMinimizing = () => {
+      const placeholder = originalPositions.get(card);
+      if (placeholder?.parentNode) {
+        placeholder.before(card);
+        placeholder.remove();
+      }
+
+      card.classList.remove("is-expanded", "is-closing");
+      card.removeAttribute("role");
+      card.removeAttribute("aria-modal");
+      card.removeAttribute("aria-labelledby");
+      card.querySelector(".experience-open").setAttribute("aria-expanded", "false");
+      card.querySelector(".experience-close").hidden = true;
+      backgroundElements.forEach((element) => {
+        element.inert = false;
+      });
+      document.body.classList.remove("experience-modal-open");
+      activeCard = null;
+      card.querySelector(".experience-open").focus();
+    };
+
+    const delay = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 170;
+    window.setTimeout(finishMinimizing, delay);
+  }
+
+  cards.forEach((card) => {
+    const openButton = card.querySelector(".experience-open");
+    const closeButton = card.querySelector(".experience-close");
+    const heading = card.querySelector("h3");
+
+    openButton.addEventListener("click", () => {
+      const placeholder = document.createComment("experience-card-position");
+      card.before(placeholder);
+      originalPositions.set(card, placeholder);
+      document.body.append(card);
+
+      activeCard = card;
+      card.classList.add("is-expanded");
+      card.setAttribute("role", "dialog");
+      card.setAttribute("aria-modal", "true");
+      card.setAttribute("aria-labelledby", heading.id);
+      openButton.setAttribute("aria-expanded", "true");
+      closeButton.hidden = false;
+      document.body.classList.add("experience-modal-open");
+      backgroundElements.forEach((element) => {
+        element.inert = element !== card;
+      });
+      closeButton.focus();
+    });
+
+    closeButton.addEventListener("click", () => minimizeCard(card));
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!activeCard) return;
+    if (event.key === "Escape") minimizeCard(activeCard);
+    if (event.key === "Tab") {
+      event.preventDefault();
+      activeCard.querySelector(".experience-close").focus();
+    }
+  });
+
+  document.querySelectorAll('a[href="#experience"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      cards.forEach((card) => card.classList.remove("is-visible"));
+
+      requestAnimationFrame(() => {
+        cards.forEach((card) => {
+          const bounds = card.getBoundingClientRect();
+          if (bounds.top >= window.innerHeight || bounds.bottom <= 0) return;
+          card.classList.remove("is-visible");
+          void card.offsetWidth;
+          card.classList.add("is-visible");
+        });
+      });
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
+        }
+      },
+      { threshold: 0.15 },
+    );
+
+    const observeItems = (items) => {
+      items.forEach((item, index) => {
+        item.dataset.reveal = "ready";
+        item.style.setProperty("--reveal-delay", `${index * 75}ms`);
+        observer.observe(item);
+      });
+    };
+
+    observeItems(cards);
+    document.querySelectorAll(".skills-group ul").forEach((list) => {
+      observeItems(list.querySelectorAll("li"));
+    });
+  }
+</script>

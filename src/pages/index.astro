@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import IntroSection from "../components/IntroSection.astro";
+import ExperienceSection from "../components/ExperienceSection.astro";
+import SkillsSection from "../components/SkillsSection.astro";
+import ProjectsSection from "../components/ProjectsSection.astro";
+import LinksSection from "../components/LinksSection.astro";
+---
+
+<BaseLayout>
+  <div class="page-shell">
+    <SiteHeader />
+    <main id="main-content">
+      <IntroSection />
+      <ExperienceSection />
+      <SkillsSection />
+      <ProjectsSection />
+      <LinksSection />
+    </main>
+    <footer class="site-footer">
+      <span>JAKE ANDREWS</span>
+      <span>BIOSCIENCES / PERSONAL PROFILE</span>
+    </footer>
+  </div>
+</BaseLayout>
